@@ -1,34 +1,22 @@
 import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
 import { HTTP } from 'meteor/http';
 
-import socket_io from 'socket.io';
+import '../imports/exchanges/bitfinex_api/bitfinex.js';
+import '../imports/exchanges/poloniex_api/poloniex.js';
+import '../imports/exchanges/exchanges.js';  
 
-Meteor.startup(() => {
-	const io = socket_io(80);
+Meteor.methods({
+	'getCurrentDate': function() {
+		var currentDate = new Date();
 
-	io.on('connection', function(socket) {
+		currentDate = currentdate.getDate() + "/"
+	                + (currentdate.getMonth()+1)  + "/" 
+	                + currentdate.getFullYear() + " @ "  
+	                + currentdate.getHours() + ":"  
+	                + currentdate.getMinutes() + ":" 
+	                + currentdate.getSeconds();
 
-	});
-
-	Meteor.setInterval(function() {
-		HTTP.get("https://api.bitfinex.com/v1/pubticker/btcusd", function(error, result) {
-			if(!error) {
-				io.emit('hello', result.data);
-			} else {
-				console.log(error);
-			}
-		});
-	}, 5000);
+        return currentDate;
+	}
 });
-
-/*
-Meteor.setInterval(function() {
-	HTTP.get("https://api.bitfinex.com/v1/pubticker/btcusd", function(error, result) {
-		if(!error) {
-			console.log(result.data);
-		} else {
-			console.log(error);
-		}
-	});
-}, 5000);
-*/

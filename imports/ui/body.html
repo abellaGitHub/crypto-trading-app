@@ -7,8 +7,12 @@
 		<button class = "connectToSocket">Connect socket!</button>
 		<ul>
 			{{#each data}}
-				{{> bitfinex}}
+				{{> exchangesData}}
 			{{/each}}
 		</ul>
 	</div>
 </body>
+
+<template name = "exchangesData">
+	<li>Data: {{date}}, BfxLP: {{btxLastPrice}}, PlxLP: {{plxLastPrice}}, BfxAP: {{btxAvgPrice}}, PlxLP: {{plxAvgPrice}}</li>
+</template>
