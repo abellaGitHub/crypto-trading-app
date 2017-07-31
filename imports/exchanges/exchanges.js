@@ -2,22 +2,42 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { HTTP } from 'meteor/http';
 
-export const ExchangesData = new Mongo.Collection('exdata');
+export const UsdBtcData = new Mongo.Collection('usdbtc');
 
-Meteor.setInterval(function() {
-	var btxResponse = HTTP.get("https://api.bitfinex.com/v1/pubticker/btcusd");
-	var plxResponse = HTTP.get('https://poloniex.com/public?command=returnTicker');
+if(Meteor.isServer) {
+	Meteor.setInterval(function() {
+		var bitfinexUsdBtc = HTTP.get("https://api.bitfinex.com/v1/pubticker/btcusd");
+		var poloniexAll = HTTP.get('https://poloniex.com/public?command=returnTicker');
+		var bittrexUsdBtc = HTTP.get('https://bittrex.com/api/v1.1/public/getticker?market=usdt-btc');
 
-	if(!btxResponse && !plxResponse) {
-		var btxData = btxResponse.data;
-		var plxData = plxResponse.data.USDT_BTC;
+		if(bitfinexUsdBtc && poloniexAll && bittrexUsdBtc) {
+			var bitfinexUsdBtcData = bitfinexUsdBtc.data;
+			var poloniexUsdBtcData = poloniexAll.data.USDT_BTC;
+			var bittrexUsdBtcData = bittrexUsdBtc.data.result;
 
-		ExchangesData.insert({
-			plxLastPrice: plxData.last,
-			plxAvgPrice: (plxData.lowestAsk + plxData.highestBid) / 2,
-			btxLastPrice: btxData.last_price,
-			btxAvgPrice: btxData.mid,
-			date: Meteor.call('getCurrentDate')
-		});
+			var usdBtcData = {
+				bitfinex:  {
+					last: round(bitfinexUsdBtcData.last_price, 3),
+					mid: round(bitfinexUsdBtcData.mid, 3)
+				},
+				poloniex: {
+					last: round(poloniexUsdBtcData.last, 3),
+					mid: round((parseFloat(poloniexUsdBtcData.highestBid) + parseFloat(poloniexUsdBtcData.lowestAsk)) / 2, 3)
+				},
+				bittrex: {
+					last: round(bittrexUsdBtcData.Last, 3),
+					mid: round((parseFloat(bittrexUsdBtcData.Ask) + parseFloat(bittrexUsdBtcData.Bid)) / 2, 3)
+				},
+				timestamp: Date.now(),
+				date: new Date()
+			}
+
+			UsdBtcData.insert(usdBtcData);
+		}
+	}, 5000);
+
+	var round = function(number, place) {
+		var x = Math.pow(10, place);
+		return Math.round(number * x) / x;
 	}
-}, 5000);
+}

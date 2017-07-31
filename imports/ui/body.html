@@ -14,5 +14,10 @@
 </body>
 
 <template name = "exchangesData">
-	<li>Data: {{date}}, BfxLP: {{btxLastPrice}}, PlxLP: {{plxLastPrice}}, BfxAP: {{btxAvgPrice}}, PlxLP: {{plxAvgPrice}}</li>
+	<li>
+		<p>Data: {{date}}</p>
+		<p>Bitfinex: {{bitfinex.last}} / {{bitfinex.mid}}</p>
+		<p>Poloniex: {{poloniex.last}} / {{poloniex.mid}}</p>
+		<p>Bittrex: {{bittrex.last}} / {{bittrex.mid}}</p>
+	</li>
 </template>
