@@ -1,0 +1,32 @@
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import { HTTP } from 'meteor/http';
+
+export const PoloniexData = new Mongo.Collection('poloniex');
+
+if(Meteor.isServer) {
+	Meteor.startup(function() {
+		Meteor.setInterval(function() {
+			HTTP.get('https://poloniex.com/public?command=returnTicker', function(error, response) {
+				if(!error) {
+					var usdBtcData = response.data.USDT_BTC;
+
+					usdBtcData = {
+						last: usdBtcData.last,
+						mid: (parseFloat(usdBtcData.highestBid) + parseFloat(usdBtcData.lowestAsk)) / 2,
+						date: Meteor.call('getCurrentDate')
+					}
+
+					usdBtcData = {
+						usd_btc: usdBtcData
+					}
+
+					PoloniexData.insert(usdBtcData);
+				} else {
+					console.log('Poloniex');
+					console.log(error);
+				}
+			});
+		}, 5000);
+	});
+}

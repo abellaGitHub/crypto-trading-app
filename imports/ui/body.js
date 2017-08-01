@@ -6,11 +6,26 @@ import { UsdBtcData } from '../exchanges/exchanges.js';
 import './body.html';
 
 Template.body.helpers({
+
+});
+
+Template.body.events({
+
+});
+
+/*
+Template.exchangesData.helpers({
 	'data': function() {
+
+		function round(number, place) {
+			var x = Math.pow(10, place);
+			return Math.round(number * x) / x;
+		}
 
 		var data = {
 			exchanges: [],
-			pairs: []
+			pairs: [],
+			date: ''
 		};
 
 		var exchangesTab = [
@@ -32,29 +47,44 @@ Template.body.helpers({
 		];
 
 		var usdBtcData = UsdBtcData.find({}, {sort:{timestamp: -1}}).fetch()[0];
+		if(usdBtcData !== undefined) {
+			data.date = usdBtcData.date;
+			for(var i = 0; i < exchangesTab.length; i++) {
+				var exchangeSale = exchangesTab[i];
+				var exchangeSaleData = usdBtcData[exchangeSale.name];
 
-		for(var i = 0; i < exchangesTab.length; i++) {
-			var exchangeSale = exchangesTab[i];
-			
-			if(exchangeSale.isActive && exchangeSale.canShortSale) {
-				var exchangeSaleData = usdBtcData[exchange.name];
+				if(exchangeSale.isActive && exchangeSale.canShortSale) {				
+					for(var j = 0; j < exchangesTab.length; j++) {
+						var exchangeBuy = exchangesTab[j];
 
-				for(var j; j < exchangesTab.length; i++) {
-					var exchangeBuy = exchangesTab[j];
+						if(exchangeBuy.isActive && (exchangeBuy.name !== exchangeSale.name)) {
+							var exchangeBuyData = usdBtcData[exchangeBuy.name];
 
-					if(exchangeBuy.isActive && (exchangeBuy.name !== exchangeSale.name)) {
-
+							var pair = {
+								sale: exchangeSale.name,
+								buy: exchangeBuy.name,
+								spread: round(((exchangeSaleData.last - exchangeBuyData.last) / exchangeBuyData.last) * 100, 3)
+							}
+							
+							data.pairs.push(pair);
+						} 
 					}
 				}
+
+				var exchange = {
+					name: exchangeSale.name,
+					last: exchangeSaleData.last,
+					mid: exchangeSaleData.mid
+				}
+
+				data.exchanges.push(exchange);
 			}
+			
+		} else {
+			console.log('USD-BTC undefined');
 		}
 
-		return UsdBtcData.find({}, {sort:{timestamp: -1}});
+		return data;
 	}
 });
-
-Template.body.events({
-	'click .connectToSocket': function() {
-
-	}
-});
+*/

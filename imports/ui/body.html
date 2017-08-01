@@ -4,20 +4,26 @@
 			<h3>Earn some fucking crypto money!</h3>
 		</header>
 
-		<button class = "connectToSocket">Connect socket!</button>
-		<ul>
-			{{#each data}}
-				{{> exchangesData}}
-			{{/each}}
-		</ul>
+		<div class = "container well col-md-6 col-md-offset-3">
+			{{> exchangesData}}
+		</div>
 	</div>
 </body>
 
+<!--
 <template name = "exchangesData">
-	<li>
-		<p>Data: {{date}}</p>
-		<p>Bitfinex: {{bitfinex.last}} / {{bitfinex.mid}}</p>
-		<p>Poloniex: {{poloniex.last}} / {{poloniex.mid}}</p>
-		<p>Bittrex: {{bittrex.last}} / {{bittrex.mid}}</p>
-	</li>
+	<p>Date: {{data.date}}</p>
+	<p>[Exchanges]</p>
+	<ul>
+		{{#each data.exchanges}}
+			<li>{{this.name}}: {{last}} / {{mid}}</li>
+		{{/each}}
+	</ul>
+	<p>[Exchanges pairs]</p>
+	<ul>
+		{{#each data.pairs}}
+			<li>{{sale}} / {{buy}}: {{spread}}%</li>
+		{{/each}}
+	</ul>
 </template>
+-->
