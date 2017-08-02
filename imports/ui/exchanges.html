@@ -1,0 +1,8 @@
+<template name = 'exchanges'>
+	<ul>
+		{{#each data}}
+			<p>Date: {{data.date}}</p>
+			<li>{{name}}: {{data.data.last}} / {{data.data.mid}}</li>
+		{{/each}}
+	</ul>
+</template>

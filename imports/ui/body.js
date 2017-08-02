@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-import { UsdBtcData } from '../exchanges/exchanges.js';
-
 import './body.html';
+
+import './exchanges.js';
 
 Template.body.helpers({
 

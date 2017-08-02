@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 
-// import '../imports/exchanges/exchanges.js';
+import '../imports/exchanges/exchanges.js';
 import '../imports/exchanges/bitfinex.js';
-import '../imports/exchanges/poloniex.js';
+import '../imports/exchanges/poloniex.js'; 
 import '../imports/exchanges/bittrex.js';
 
 Meteor.methods({

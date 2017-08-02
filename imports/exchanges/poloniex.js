@@ -12,13 +12,14 @@ if(Meteor.isServer) {
 					var usdBtcData = response.data.USDT_BTC;
 
 					usdBtcData = {
-						last: usdBtcData.last,
-						mid: (parseFloat(usdBtcData.highestBid) + parseFloat(usdBtcData.lowestAsk)) / 2,
-						date: Meteor.call('getCurrentDate')
+						last: Meteor.call('round', usdBtcData.last, 3),
+						mid: Meteor.call('round', (parseFloat(usdBtcData.highestBid) + parseFloat(usdBtcData.lowestAsk)) / 2, 3)
 					}
 
 					usdBtcData = {
-						usd_btc: usdBtcData
+						id: 'plx',
+						usd_btc: usdBtcData,
+						date: Meteor.call('getCurrentDate')
 					}
 
 					PoloniexData.insert(usdBtcData);

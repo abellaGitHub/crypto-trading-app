@@ -12,13 +12,14 @@ if(Meteor.isServer) {
 					var usdBtcData = response.data.result;
 
 					usdBtcData = {
-						last: usdBtcData.Last,
-						mid: (parseFloat(usdBtcData.Bid) + parseFloat(usdBtcData.Ask)) / 2,
-						date: Meteor.call('getCurrentDate')
+						last: Meteor.call('round', usdBtcData.Last, 3),
+						mid: Meteor.call('round', (parseFloat(usdBtcData.Bid) + parseFloat(usdBtcData.Ask)) / 2, 3)
 					}
 
 					usdBtcData = {
-						usd_btc: usdBtcData
+						id: 'btx',
+						usd_btc: usdBtcData,
+						date: Meteor.call('getCurrentDate')
 					}
 
 					BittrexData.insert(usdBtcData);

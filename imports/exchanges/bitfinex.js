@@ -12,13 +12,14 @@ if(Meteor.isServer) {
 					var usdBtcData = response.data;
 
 					usdBtcData = {
-						last: usdBtcData.last_price,
-						mid: usdBtcData.mid,
-						date: Meteor.call('getCurrentDate')
+						last: Meteor.call('round', usdBtcData.last_price, 3),
+						mid: Meteor.call('round', usdBtcData.mid, 3)
 					}
 
 					usdBtcData = {
-						usd_btc: usdBtcData
+						id: 'bfx',
+						usd_btc: usdBtcData, 
+						date: Meteor.call('getCurrentDate')
 					}
 
 					BitfinexData.insert(usdBtcData);
