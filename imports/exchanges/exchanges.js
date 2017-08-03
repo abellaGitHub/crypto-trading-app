@@ -24,7 +24,11 @@ if(Meteor.isServer) {
 		for(var i = 0; i < exchanges.length; i++) {
 			var exchange = exchanges[i];
 
-			Exchanges.insert(exchange);
+			var exchangeFound = Exchanges.find({id: exchange.id}).fetch();
+			
+			if(exchangeFound.length < 1) {
+				Exchanges.insert(exchange);
+			}
 		}
 	});
 }

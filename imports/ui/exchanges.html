@@ -1,8 +1,12 @@
 <template name = 'exchanges'>
 	<ul>
-		{{#each data}}
-			<p>Date: {{data.date}}</p>
-			<li>{{name}}: {{data.data.last}} / {{data.data.mid}}</li>
+		{{#each getExchangesData}}
+			<div class = "well exchange">
+				<li>
+					<p>Date: {{date}}</p>
+					{{name}}: {{data.last}} / {{data.mid}}
+				</li>
+			</div>
 		{{/each}}
 	</ul>
 </template>

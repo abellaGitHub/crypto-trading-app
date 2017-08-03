@@ -8,7 +8,7 @@ import { BittrexData } from '../exchanges/bittrex.js';
 import './exchanges.html';
 
 Template.exchanges.helpers({
-	'data': function() {
+	'getExchangesData': function() {
 
 		var exchangeDbMap = {
 			bfx: BitfinexData,
@@ -22,8 +22,8 @@ Template.exchanges.helpers({
 			var exchange = exchanges[i];
 			var exchangeDb = exchangeDbMap[exchange.id];
 
-			var data = exchangeDb.find().fetch()[0]
-	
+			var data = exchangeDb.find({}, {sort: {date: -1}}).fetch()[0];
+
 			if(data === undefined) {
 				continue;
 			} 
