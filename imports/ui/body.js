@@ -4,6 +4,7 @@ import { Template } from 'meteor/templating';
 import './body.html';
 
 import './exchanges.js';
+import './orders.js';
 
 Template.body.helpers({
 

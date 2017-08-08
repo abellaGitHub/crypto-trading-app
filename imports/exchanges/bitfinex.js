@@ -8,10 +8,10 @@ export const BitfinexData = new Mongo.Collection('bitfinex');
 
 if(Meteor.isServer) {
 	Meteor.startup(function() {
-
+		/*
 		const wss = new WebSocket('wss://api.bitfinex.com/ws/2');
 
-		Meteor.wrapAsync(wss.on('message', function(msg) {
+		wss.on('message', Meteor.bindEnvironment(function(msg) {
 			var res = JSON.parse(msg);
 	
 			if(res.toString() === '[object Object]') {
@@ -27,7 +27,7 @@ if(Meteor.isServer) {
 					var bid = dataArray[0];
 					var ask = dataArray[2];
 					var last = dataArray[6];
-					var mid = (bid + ask) / 2;
+					var mid = Meteor.call('round', (bid + ask) / 2, 2);
 
 					console.log('Last:', last, 'Bid:', bid, 'Ask:', ask, 'Mid:', mid);
 				} else {
@@ -48,7 +48,7 @@ if(Meteor.isServer) {
 
 			wss.send(JSON.stringify(subReq));
 		});
-
+		*/
 		/*
 		Meteor.setInterval(function() {
 			HTTP.get('https://api.bitfinex.com/v1/pubticker/btcusd', function(error, response) {

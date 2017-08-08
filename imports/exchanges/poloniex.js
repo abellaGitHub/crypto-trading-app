@@ -6,7 +6,7 @@ export const PoloniexData = new Mongo.Collection('poloniex');
 
 if(Meteor.isServer) {
 	Meteor.startup(function() {
-		Meteor.setInterval(function() {
+		/*Meteor.setInterval(function() {
 			HTTP.get('https://poloniex.com/public?command=returnTicker', function(error, response) {
 				if(!error) {
 					var usdBtcData = response.data.USDT_BTC;
@@ -28,6 +28,6 @@ if(Meteor.isServer) {
 					console.log(error);
 				}
 			});
-		}, 5000);
+		}, 5000);*/
 	});
 }

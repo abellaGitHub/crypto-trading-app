@@ -2,11 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { HTTP } from 'meteor/http';
 
+import WebSocket from 'ws';
+
 export const BittrexData = new Mongo.Collection('bittrex');
 
 if(Meteor.isServer) {
 	Meteor.startup(function() {
-		Meteor.setInterval(function() {
+		/*Meteor.setInterval(function() {
 			HTTP.get('https://bittrex.com/api/v1.1/public/getticker?market=usdt-btc', function(error, response) {
 				if(!error) {
 					var usdBtcData = response.data.result;
@@ -28,6 +30,6 @@ if(Meteor.isServer) {
 					console.log(error);
 				}
 			});
-		}, 5000);
+		}, 5000);*/
 	});
 }

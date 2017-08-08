@@ -1,0 +1,31 @@
+<template name = 'orders'>
+	{{> addOrder}}
+	<ul>
+		{{#each getOrdersList}}
+			<li class = 'well'>
+				
+			</li>
+		{{/each}}		
+	</ul>
+</template>
+
+<template name = 'addOrder'>
+	<select id = 'exchanges'>
+	    <option disabled="disabled" selected="selected">Please Select</option> 
+	    {{#each getExchanges}}
+	        <option value = '{{this.id}}'>{{this.name}}</option>
+	    {{/each}}
+	</select>
+	<select id = 'pairs'>
+	    <option disabled="disabled" selected="selected">Please Select</option> 
+	    {{#each getCurrencyPairs}}
+	        <option value = '{{this}}'>{{this}}</option>
+	    {{/each}}
+	</select>
+	<select id = 'type'>
+	    <option disabled="disabled" selected="selected">Please Select</option> 
+	    {{#each getTypes}}
+	        <option value = '{{this}}'>{{this}}</option>
+	    {{/each}}
+	</select>			
+</template>
