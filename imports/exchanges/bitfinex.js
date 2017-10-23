@@ -53,7 +53,17 @@ if(Meteor.isServer) {
 					console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'UNSUBSCRIBED:', 'pair:', unsubCh.pair, 'channel:', unsubCh.channel, 'channelId:', unsubCh.chanId);
 				}
 			} else {
-				console.log(msg);
+				var chanId = msg[0];
+				var channel = _.find(channels, (channel) => { return channel.chanId === chanId });
+				var data = msg[1];
+
+				if(channel !== undefined) {
+					if(channel.channel === 'ticker') {
+
+					} else if(channel.channel === 'candles') {
+						console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'CANDLES', 'key:', channel.key);
+					}
+				}
 			}
 		}); 
 
