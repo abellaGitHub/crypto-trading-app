@@ -2,77 +2,63 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { HTTP } from 'meteor/http';
 
-import WebSocket from 'ws';
+import WebSocket  from 'ws';
+import moment from 'moment';
+import _ from 'lodash';
 
 export const BitfinexData = new Mongo.Collection('bitfinex');
 
 if(Meteor.isServer) {
-	Meteor.startup(function() {
-		/*
-		const wss = new WebSocket('wss://api.bitfinex.com/ws/2');
+	const API_KEY = 'NKtwF11HFwYSfTcUNYaYI89EK0AWgWLSnUn7YAnFWtP';
+	const API_SECRET = 'fWGw1cNKvQ5xRV8xto8JQviOoD0CMeijKWJk1gcNWxU';
+	const ws = new WebSocket('wss://api.bitfinex.com/ws/2');
 
-		wss.on('message', Meteor.bindEnvironment(function(msg) {
-			var res = JSON.parse(msg);
-	
-			if(res.toString() === '[object Object]') {
-				if(res.event === 'subscribed') {
-					console.log(res);
-				} else if(res.event === 'info') {
-					console.log(res);
+	var channels = [];
+
+	Meteor.startup(function() {
+		ws.on('open', () => {
+			console.log('Connection opened ...');
+			var subscribe = {
+				event: 'subscribe',
+				channel: 'candles',
+				key: 'trade:1h:tBTCUSD'
+			};
+			ws.send(JSON.stringify(subscribe));
+		});
+
+		ws.on('message', (msg) => {
+			msg = JSON.parse(msg);
+			if(msg.event === 'pong') {
+				console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'PING: success');
+			} else if(msg.event === 'info') {
+				if(msg.version !== undefined) {
+					console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'INFO:', 'version:', msg.version);
+				} else if(msg.code !== undefined) {
+					console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'INFO:', 'code:', msg.code, 'msg:', msg.msg);
+				}
+			} else if(msg.event === 'error') {
+				console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'ERROR:', 'code:', msg.code, 'msg:', msg.msg);
+			} else if(msg.event === 'subscribed') {
+				if(msg.channel === 'ticker') {
+					channels.push({channel: msg.channel, pair: msg.pair, chanId: msg.chanId});
+					console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'SUBSCRIBED:', 'pair:', msg.pair, 'channel:', msg.channel, 'channelId:', msg.chanId);
+				} else if(msg.channel === 'candles') {
+					channels.push({channel: msg.channel, key: msg.key, chanId: msg.chanId});
+					console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'SUBSCRIBED:', 'key:', msg.key, 'channel:', msg.channel, 'channelId:', msg.chanId);
+				}
+			} else if(msg.event === 'unsubscribed') {
+				var unsubCh = _.remove(channels, (channel) => { return channel.chanId === msg.chanId});
+				if(unsubCh.length > 0) {
+					unsubCh = unsubCh[0];
+					console.log(moment().format('HH:mm:ss DD/MM/YYYY'), 'UNSUBSCRIBED:', 'pair:', unsubCh.pair, 'channel:', unsubCh.channel, 'channelId:', unsubCh.chanId);
 				}
 			} else {
-				var dataArray = res[1];
-
-				if(typeof dataArray !== 'string') {
-					var bid = dataArray[0];
-					var ask = dataArray[2];
-					var last = dataArray[6];
-					var mid = Meteor.call('round', (bid + ask) / 2, 2);
-
-					console.log('Last:', last, 'Bid:', bid, 'Ask:', ask, 'Mid:', mid);
-				} else {
-					console.log('It is just a heartbeat ...');
-				}
+				console.log(msg);
 			}
-		}));
- 
-		wss.on('open', function() {
-			console.log('Connected to Bitfinex WebSocket');
-			// wss.send(JSON.stringify({event: 'ping'}));
+		}); 
 
-			let subReq = {
-				event: 'subscribe',
-				channel: 'ticker',
-				symbol: 'tBTCUSD'
-			};
-
-			wss.send(JSON.stringify(subReq));
-		});
-		*/
-		/*
-		Meteor.setInterval(function() {
-			HTTP.get('https://api.bitfinex.com/v1/pubticker/btcusd', function(error, response) {
-				if(!error) {
-					var usdBtcData = response.data;
-
-					usdBtcData = {
-						last: Meteor.call('round', usdBtcData.last_price, 3),
-						mid: Meteor.call('round', usdBtcData.mid, 3)
-					}
-
-					usdBtcData = {
-						id: 'bfx',
-						usd_btc: usdBtcData, 
-						date: Meteor.call('getCurrentDate')
-					}
-
-					BitfinexData.insert(usdBtcData);
-				} else {
-					console.log('Bitfinex');
-					console.log(error);
-				}
-			});
-		}, 5000);
-		*/
+		Meteor.setInterval(() => {
+			ws.send(JSON.stringify({event: 'ping'}));
+		}, 60000);
 	});
 }

@@ -11,8 +11,8 @@ Template.orders.helpers({
 	}
 });
 
-Template.orders.events({	
-	'addOrder': function(event) {
+Template.addOrder.events({	
+	'click .addOrderButton': function(event) {
 		event.preventDefault();
 
 		var order = {
@@ -20,8 +20,13 @@ Template.orders.events({
 			currencyPair: event.target.currencyPair,
 			type: event.target.orderType
 		};
-
+		console.log('Add New Order');
 		// OrdersList.insert(order);
+	},
+	'change .exchanges': function(event) {
+		event.preventDefault();
+
+		console.log(event.target.value);
 	}
 });
 
@@ -30,7 +35,7 @@ Template.addOrder.helpers({
 		return Exchanges.find({}, {sort: {name: 1}});
 	},
 	'getCurrencyPairs': function() {
-		return ['USD/BTC'];
+		return ['USD/BTC', 'BTC/ETH', 'BTC/LTC', 'BTC/XRP'];
 	},
 	'getTypes': function() {
 		return ['BUY', 'SELL'];
